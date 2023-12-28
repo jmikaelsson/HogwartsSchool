@@ -1,4 +1,4 @@
-﻿using ConsoleApp1.Models;
+﻿using HogwartsSchool.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -6,9 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ConsoleApp1.Models;
+using HogwartsSchool.Models;
+using HogwartsSchool;
 
-namespace ConsoleApp1;
+namespace HogwartsSchool;
 
 internal class StudentMeny
 {
@@ -53,49 +54,212 @@ internal class StudentMeny
                     break;
             }
         }
+
     }
 
     public void ShowStudentsInHouse(string choise)
     {
-        int houseChoise = Convert.ToInt32(choise);
-        var studentsInHouse = Context.Students
-                                .Include(s => s.Fkclass)
-                                .Where(s => s.FkclassId == houseChoise)
-                                .OrderBy(s => s.LastName)
-                                .ToList();
-
-        Console.WriteLine("\n─── HOGWARTS SCHOOL OF WITCHCRAFT AND WIZRADRY ──────────────────────────────────────────────\n");
-        foreach (var person in studentsInHouse)
+        while (true)
         {
-            Console.WriteLine(person.FirstName + " " + person.LastName);
-            Console.WriteLine(person.PersonNumber);
-            Console.WriteLine();
+            Console.WriteLine("In what order do you want to sort by?\n" +
+                "1. First name, a-z\n2. First name, z-a\n3. Last name, a-z\n4. Last name, z-a\n\n5. Go back to start meny");
+            string orderChoise = Console.ReadLine();
+            int houseChoise = Convert.ToInt32(choise);
+            switch (orderChoise)
+            {
+                case "1":
+                    Console.Clear();
+                    var studentsInHouseFirstNameA = Context.Students
+                                            .Include(s => s.Fkclass)
+                                            .Where(s => s.FkclassId == houseChoise)
+                                            .OrderBy(s => s.FirstName)
+                                            .ToList();
+
+                    Console.WriteLine("\n─── HOGWARTS SCHOOL OF WITCHCRAFT AND WIZRADRY ──────────────────────────────────────────────\n");
+                    foreach (var person in studentsInHouseFirstNameA)
+                    {
+                        Console.WriteLine(person.FirstName + " " + person.LastName);
+                        Console.WriteLine(person.PersonNumber);
+                        Console.WriteLine();
+                    }
+                    Console.WriteLine("\n─────────────────────────────────────────────────────────────────────────────────────────────");
+                    Console.WriteLine("Press Enter to go back");
+                    Console.ReadKey();
+                    Console.Clear();
+                    break;
+                case "2":
+                    Console.Clear();
+                    var studentsInHouseFirstnameZ = Context.Students
+                                            .Include(s => s.Fkclass)
+                                            .Where(s => s.FkclassId == houseChoise)
+                                            .OrderByDescending(s => s.FirstName)
+                                            .ToList();
+
+                    Console.WriteLine("\n─── HOGWARTS SCHOOL OF WITCHCRAFT AND WIZRADRY ──────────────────────────────────────────────\n");
+                    foreach (var person in studentsInHouseFirstnameZ)
+                    {
+                        Console.WriteLine(person.FirstName + " " + person.LastName);
+                        Console.WriteLine(person.PersonNumber);
+                        Console.WriteLine();
+                    }
+                    Console.WriteLine("\n─────────────────────────────────────────────────────────────────────────────────────────────");
+                    Console.WriteLine("Press Enter to go back");
+                    Console.ReadKey();
+                    Console.Clear();
+                    break;
+                case "3":
+                    Console.Clear();
+                    var studentsInHouseLastNameA = Context.Students
+                                            .Include(s => s.Fkclass)
+                                            .Where(s => s.FkclassId == houseChoise)
+                                            .OrderBy(s => s.LastName)
+                                            .ToList();
+
+                    Console.WriteLine("\n─── HOGWARTS SCHOOL OF WITCHCRAFT AND WIZRADRY ──────────────────────────────────────────────\n");
+                    foreach (var person in studentsInHouseLastNameA)
+                    {
+                        Console.WriteLine(person.FirstName + " " + person.LastName);
+                        Console.WriteLine(person.PersonNumber);
+                        Console.WriteLine();
+                    }
+                    Console.WriteLine("\n─────────────────────────────────────────────────────────────────────────────────────────────");
+                    Console.WriteLine("Press Enter to go back");
+                    Console.ReadKey();
+                    Console.Clear();
+                    break;
+                case "4":
+                    Console.Clear();
+                    var studentsInHouseLastNameZ = Context.Students
+                                            .Include(s => s.Fkclass)
+                                            .Where(s => s.FkclassId == houseChoise)
+                                            .OrderByDescending(s => s.LastName)
+                                            .ToList();
+
+                    Console.WriteLine("\n─── HOGWARTS SCHOOL OF WITCHCRAFT AND WIZRADRY ──────────────────────────────────────────────\n");
+                    foreach (var person in studentsInHouseLastNameZ)
+                    {
+                        Console.WriteLine(person.FirstName + " " + person.LastName);
+                        Console.WriteLine(person.PersonNumber);
+                        Console.WriteLine();
+                    }
+                    Console.WriteLine("\n─────────────────────────────────────────────────────────────────────────────────────────────");
+                    Console.WriteLine("Press Enter to go back");
+                    Console.ReadKey();
+                    Console.Clear();
+                    break;
+                case "5":
+                    Console.Clear();
+                    StartMeny start = new StartMeny();
+                    start.HeadMeny();
+                    break;
+                default:
+                    Console.WriteLine("Invalid choice. Try again.");
+                    break;
+            }
         }
-        Console.WriteLine("\n─────────────────────────────────────────────────────────────────────────────────────────────");
-        Console.WriteLine("Press Enter to go back");
-        Console.ReadKey();
-        Console.Clear();
     }
 
     public void ShowAllStudents()
     {
-        var allStudents = Context.Students
-                                .Include(s => s.Fkclass)
-                                .OrderBy(s => s.Fkclass.ClassName)
-                                .OrderBy(s => s.LastName)
-                                .ToList();
-        Console.WriteLine("\n─── HOGWARTS SCHOOL OF WITCHCRAFT AND WIZRADRY ──────────────────────────────────────────────\n");
-        foreach (var person in allStudents)
+ 
+
+    while (true)
         {
-            Console.WriteLine(person.FirstName + " " + person.LastName);
-            Console.WriteLine(person.PersonNumber);
-            Console.WriteLine(person.Fkclass.ClassName);
-            Console.WriteLine();
+            Console.WriteLine("In what order do you want to sort by?\n" +
+                "1. First name, a-z\n2. First name, z-a\n3. Last name, a-z\n4. Last name, z-a\n\n5. Go back to start meny");
+            string orderChoise = Console.ReadLine();
+            switch (orderChoise)
+            {
+                case "1":
+                    Console.Clear();
+                    var allStudentsFA= Context.Students
+                                            .Include(s => s.Fkclass)
+                                            .OrderBy(s => s.FirstName)
+                                            .ToList();
+                    Console.WriteLine("\n─── ALL STUDENTS ────────────────────────────────────────────────────────────────────────────\n");
+
+                    foreach (var person in allStudentsFA)
+                    {
+                        Console.WriteLine(person.FirstName + " " + person.LastName);
+                        Console.WriteLine(person.PersonNumber);
+                        Console.WriteLine(person.Fkclass.ClassName);
+                        Console.WriteLine();
+                    }
+                    Console.WriteLine("\n─────────────────────────────────────────────────────────────────────────────────────────────");
+                    Console.WriteLine("Press Enter to go back");
+                    Console.ReadKey();
+                    Console.Clear();
+                    break;
+                case "2":
+                    Console.Clear();
+                    var allStudentsFZ = Context.Students
+                                            .Include(s => s.Fkclass)
+                                            .OrderByDescending(s =>s.FirstName)
+                                            .ToList();
+                    Console.WriteLine("\n─── ALL STUDENTS ────────────────────────────────────────────────────────────────────────────\n");
+
+                    foreach (var person in allStudentsFZ)
+                    {
+                        Console.WriteLine(person.FirstName + " " + person.LastName);
+                        Console.WriteLine(person.PersonNumber);
+                        Console.WriteLine(person.Fkclass.ClassName);
+                        Console.WriteLine();
+                    }
+                    Console.WriteLine("\n─────────────────────────────────────────────────────────────────────────────────────────────");
+                    Console.WriteLine("Press Enter to go back");
+                    Console.ReadKey();
+                    Console.Clear();
+                    break;
+                case "3":
+                    Console.Clear();
+                    var allStudentsLA = Context.Students
+                                            .Include(s => s.Fkclass)
+                                            .OrderBy(s => s.Fkclass.ClassName)
+                                            .OrderBy(s => s.LastName)
+                                            .ToList();
+                    Console.WriteLine("\n─── ALL STUDENTS ────────────────────────────────────────────────────────────────────────────\n");
+
+                    foreach (var person in allStudentsLA)
+                    {
+                        Console.WriteLine(person.FirstName + " " + person.LastName);
+                        Console.WriteLine(person.PersonNumber);
+                        Console.WriteLine(person.Fkclass.ClassName);
+                        Console.WriteLine();
+                    }
+                    Console.WriteLine("\n─────────────────────────────────────────────────────────────────────────────────────────────");
+                    Console.WriteLine("Press Enter to go back");
+                    Console.ReadKey();
+                    Console.Clear();
+                    break; ;
+case "4":
+                    Console.Clear();
+                    var allStudentsLZ = Context.Students
+                                            .Include(s => s.Fkclass)
+                                            .OrderByDescending(s => s.LastName)
+                                            .ToList();
+                    Console.WriteLine("\n─── ALL STUDENTS ────────────────────────────────────────────────────────────────────────────\n");
+                    foreach (var person in allStudentsLZ)
+                    {
+                        Console.WriteLine(person.FirstName + " " + person.LastName);
+                        Console.WriteLine(person.PersonNumber);
+                        Console.WriteLine(person.Fkclass.ClassName);
+                        Console.WriteLine();
+                    }
+                    Console.WriteLine("\n─────────────────────────────────────────────────────────────────────────────────────────────");
+                    Console.WriteLine("Press Enter to go back");
+                    Console.ReadKey();
+                    Console.Clear();
+                    break;
+                case "5":
+    Console.Clear();
+    StartMeny start = new StartMeny();
+    start.HeadMeny();
+    break;
+default:
+    Console.WriteLine("Invalid choice. Try again.");
+    break;
+}
         }
-        Console.WriteLine("\n─────────────────────────────────────────────────────────────────────────────────────────────");
-        Console.WriteLine("Press Enter to go back");
-        Console.ReadKey();
-        Console.Clear();
     }
 
     public void AddStudent()

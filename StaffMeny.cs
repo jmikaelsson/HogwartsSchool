@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ConsoleApp1.Models;
+using HogwartsSchool.Models;
 using Microsoft.EntityFrameworkCore;
-namespace ConsoleApp1;
+namespace HogwartsSchool;
 
 internal class StaffMeny
 {
@@ -142,7 +142,7 @@ internal class StaffMeny
     public void AddStaff()
     {
         Console.WriteLine("\n─── HOGWARTS SCHOOL OF WITCHCRAFT AND WIZRADRY ──────────────────────────────────────────────\n");
-        Console.WriteLine("\n─── ADD STUDENT ───\n");
+        Console.WriteLine("\n─── ADD STAFF ───\n");
         Console.Write("First name: ");
         string firstName = Console.ReadLine();
         Console.Write("Last name: ");
@@ -187,17 +187,19 @@ internal class StaffMeny
 
             }
         }
-        
-        Console.WriteLine("\n─── FOLLOWING STUDENT HAS BEEN ADDED ───\n");
+
+        Console.WriteLine("\n─── FOLLOWING STAFF HAS BEEN ADDED ───\n");
         Console.WriteLine($"{firstName} {lastName}");
         Console.WriteLine(typSpecies);
-        Console.WriteLine($"{street} {town} {region}");
+        Console.WriteLine($"{street}\n{town}\n{region}");
 
+        //var proffession = Context.Professions.FirstOrDefault(p => p.ProfessionId == staffNumber);
         var staff = new Staff
         {
             FirstName = firstName,
             LastName = lastName,
             FkprofessionId = staffNumber,
+            //Fkprofession = proffession,
             Street = street,
             Town = town,
             Region = region,

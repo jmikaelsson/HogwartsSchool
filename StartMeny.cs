@@ -1,4 +1,4 @@
-﻿using ConsoleApp1.Models;
+﻿using HogwartsSchool.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.Identity.Client;
 using System;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConsoleApp1;
+namespace HogwartsSchool;
 
 internal class StartMeny
 {

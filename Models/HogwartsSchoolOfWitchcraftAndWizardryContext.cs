@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace ConsoleApp1.Models;
+namespace HogwartsSchool.Models;
 
 public partial class HogwartsSchoolOfWitchcraftAndWizardryContext : DbContext
 {
@@ -18,10 +18,6 @@ public partial class HogwartsSchoolOfWitchcraftAndWizardryContext : DbContext
     public virtual DbSet<Class> Classes { get; set; }
 
     public virtual DbSet<Course> Courses { get; set; }
-
-    public virtual DbSet<Enrolment> Enrolments { get; set; }
-
-    public virtual DbSet<Grade> Grades { get; set; }
 
     public virtual DbSet<Owl> Owls { get; set; }
 
@@ -67,30 +63,6 @@ public partial class HogwartsSchoolOfWitchcraftAndWizardryContext : DbContext
                 .HasConstraintName("FK_Course_Staff");
         });
 
-        modelBuilder.Entity<Enrolment>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToTable("Enrolment");
-
-            entity.Property(e => e.FkcourseId).HasColumnName("FKCourseID");
-            entity.Property(e => e.FkstudentId).HasColumnName("FKStudentID");
-            entity.Property(e => e.Grade)
-                .HasMaxLength(1)
-                .IsUnicode(false)
-                .IsFixedLength();
-        });
-
-        modelBuilder.Entity<Grade>(entity =>
-        {
-            entity.ToTable("Grade");
-
-            entity.Property(e => e.GradeId)
-                .ValueGeneratedNever()
-                .HasColumnName("GradeID");
-            entity.Property(e => e.Grade1).HasColumnName("Grade");
-        });
-
         modelBuilder.Entity<Owl>(entity =>
         {
             entity
@@ -98,17 +70,12 @@ public partial class HogwartsSchoolOfWitchcraftAndWizardryContext : DbContext
                 .ToTable("OWL");
 
             entity.Property(e => e.FkcourseId).HasColumnName("FKCourseID");
-            entity.Property(e => e.FkgradeId).HasColumnName("FKGradeID");
             entity.Property(e => e.FkstudentId).HasColumnName("FKStudentID");
 
             entity.HasOne(d => d.Fkcourse).WithMany()
                 .HasForeignKey(d => d.FkcourseId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Enrolment_Course");
-
-            entity.HasOne(d => d.Fkgrade).WithMany()
-                .HasForeignKey(d => d.FkgradeId)
-                .HasConstraintName("FK_OWL_Grade1");
 
             entity.HasOne(d => d.Fkstudent).WithMany()
                 .HasForeignKey(d => d.FkstudentId)

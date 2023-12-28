@@ -1,4 +1,4 @@
-﻿using ConsoleApp1.Models;
+﻿using HogwartsSchool.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -6,11 +6,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ConsoleApp1.Models;
+using HogwartsSchool.Models;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System.ComponentModel.DataAnnotations;
+using System.Numerics;
+using Microsoft.EntityFrameworkCore.Query.Internal;
+using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace ConsoleApp1
+namespace HogwartsSchool
 {
     internal class CoursesMeny
     {
@@ -22,29 +25,35 @@ namespace ConsoleApp1
         }
         public void AllCourses()
         {
-            Logo logo = new Logo();
-            logo.SmallLogo();
-            Console.WriteLine("\n─────────────────────────────────────────────────────────────────────────────────────────────");
-            int courseID = 1;
-            var allCourses = from owl in Context.Owls
-                             join course in Context.Courses on owl.FkcourseId equals course.CourseId
-                             join grades in Context.Grades on owl.FkgradeId equals grades.GradeId
-                             where course.CourseId == courseID
-                             select new
-                             {
-                                 CourseName = course.CourseName,
-                                 HighGrade = //Max(grades.Grade1),//grades.Grade1.Value.Max(),
-                                 MinGrde = grades.Grade1.Value.Max(),
-                                 avGrade = grades.Grade1.Value.Avrege()
-                             };
+            Console.WriteLine("\n─── All courses ─────────────────────────────────────────────────────────────────────────────\n");
 
-                             
+            int courseIDs = 1;
+
+            var allCourses = Context.Courses
+                            .Select(c => c.CourseName)
+                            .ToList();
+
             foreach (var item in allCourses)
             {
-                Console.WriteLine(item.CourseName);
-                courseID++;
-            }
+                Console.WriteLine(item);
 
+                var highGrade = Context.Owls
+                                .Where(o => o.Fkcourse.CourseId == courseIDs)
+                                .Select(o => o.Grade).Max();
+                var lowGrade = Context.Owls
+                                .Where(o => o.Fkcourse.CourseId == courseIDs)
+                                .Select(o => o.Grade).Min();
+                var avGrade = Context.Owls
+                                .Where(o => o.Fkcourse.CourseId == courseIDs)
+                                .Select(o => o.Grade).Average();
+
+                Console.WriteLine("Highest grade: " + highGrade);
+                Console.WriteLine("Lowest grade: " +lowGrade);
+                Console.WriteLine("Average grade: " + (int)avGrade);
+                Console.WriteLine();
+                courseIDs++;
+            }
+                            
             Console.WriteLine("\n─────────────────────────────────────────────────────────────────────────────────────────────");
             Console.WriteLine("Press Enter to go back");
             Console.ReadKey();

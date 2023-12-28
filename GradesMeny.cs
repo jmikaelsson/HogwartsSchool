@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ConsoleApp1.Models;
+using HogwartsSchool.Models;
 using Microsoft.EntityFrameworkCore;
 using static System.Net.Mime.MediaTypeNames;
-namespace ConsoleApp1;
+namespace HogwartsSchool;
 
 internal class GradesMeny
 {
@@ -63,7 +63,6 @@ internal class GradesMeny
         int courseID = Convert.ToInt32(choise);
         var gradesInCourses = Context.Owls
                             .Include(o => o.Fkstudent)
-                            .Include(o => o.Fkgrade)
                             .Include(o => o.Fkcourse)
                             .ThenInclude(o => o.FkcourseCoordinator)
                             .ThenInclude(o => o.Fkprofession)
@@ -76,7 +75,7 @@ internal class GradesMeny
         {
             Console.WriteLine(grade.Fkstudent.FirstName + " " + grade.Fkstudent.LastName);
             Console.Write("Grade: ");
-            Console.WriteLine(grade.Fkgrade.Grade1);
+            Console.WriteLine(grade.Grade);
             Console.Write("Graded by: ");
             Console.WriteLine(grade.Fkcourse.FkcourseCoordinator.Fkprofession.Role + " " + grade.Fkcourse.FkcourseCoordinator.FirstName + " " + grade.Fkcourse.FkcourseCoordinator.LastName);
             Console.Write("Date: ");
@@ -95,11 +94,10 @@ internal class GradesMeny
         var lastmonth = new DateTime(today.Year, today.Month - 1, 1);
         var gradesInCourses = Context.Owls
                             .Include(o => o.Fkstudent)
-                            .Include(o => o.Fkgrade)
                             .Include(o => o.Fkcourse)
                             .ThenInclude(o => o.FkcourseCoordinator)
                             .ThenInclude(o => o.Fkprofession)
-                            //.Where(o => o.GradeDate )
+                            .Where(o => o.GradeDate >= DateOnly.FromDateTime(DateTime.Now.AddMonths(-1)))
                             .OrderBy(o => o.Fkstudent.LastName)
                             .ToList();
 
@@ -108,7 +106,7 @@ internal class GradesMeny
         {
             Console.WriteLine(grade.Fkstudent.FirstName + " " + grade.Fkstudent.LastName);
             Console.Write("Grade: ");
-            Console.WriteLine(grade.Fkgrade.Grade1);
+            Console.WriteLine(grade.Grade);
             Console.Write("Graded by: ");
             Console.WriteLine(grade.Fkcourse.FkcourseCoordinator.Fkprofession.Role + " " + grade.Fkcourse.FkcourseCoordinator.FirstName + " " + grade.Fkcourse.FkcourseCoordinator.LastName);
             Console.Write("Date: ");
