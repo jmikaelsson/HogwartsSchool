@@ -12,4 +12,6 @@ public partial class Course
     public int? FkcourseCoordinatorId { get; set; }
 
     public virtual Staff? FkcourseCoordinator { get; set; }
+
+    public virtual ICollection<Owl> Owls { get; set; } = new List<Owl>();
 }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using HogwartsSchool.Models;
 using Microsoft.EntityFrameworkCore;
 using static System.Net.Mime.MediaTypeNames;
+using System.Diagnostics.CodeAnalysis;
 namespace HogwartsSchool;
 
 internal class GradesMeny
@@ -24,7 +25,7 @@ internal class GradesMeny
         logo.SmallLogo();
         Console.WriteLine("\n─────────────────────────────────────────────────────────────────────────────────────────────");
         Console.WriteLine("What grades do you want to see?\n" +
-            "\n1. Defence Against the Dark Arts\n2. Charms\n3. Astronomy\n4. Herbology\n5. History of Magic\n6. Transfiguration\n7. Divination\n8. Care of Magical Creatures\n9. Potions\n10. Ancient Runes\n11. Arithmancy\n12. All grades from the last month\n\n13. Go back to startmeny");
+            "\n1. Defence Against the Dark Arts\n2. Charms\n3. Astronomy\n4. Herbology\n5. History of Magic\n6. Transfiguration\n7. Divination\n8. Care of Magical Creatures\n9. Potions\n10. Ancient Runes\n11. Arithmancy\n12. All grades from the last month\n\n13. Enter new grade\n14. Go back to startmeny");
 
         string choise = Console.ReadLine();
         switch (choise)
@@ -48,6 +49,10 @@ internal class GradesMeny
             //ShowGradesLastMonth();
             //break;
             case "13":
+                Console.Clear();
+                EnterNewGrade();
+                break;
+            case "14":
                 Console.Clear();
                 StartMeny start = new StartMeny();
                 start.HeadMeny();
@@ -114,6 +119,49 @@ internal class GradesMeny
             Console.WriteLine();
         }
 
+        Console.WriteLine("Press Enter to go back");
+        Console.ReadKey();
+        Console.Clear();
+    }
+    public void EnterNewGrade()
+    {
+        Console.WriteLine("\n─── HOGWARTS SCHOOL OF WITCHCRAFT AND WIZRADRY ──────────────────────────────────────────────\n");
+        Console.WriteLine("\n─── REGESTER GRADE ───\n");
+        Console.Write("Course ID: ");
+        int courseID = Convert.ToInt32(Console.ReadLine());
+        Console.Write("Student ID: ");
+        int studentID = Convert.ToInt32(Console.ReadLine());
+        Console.Write("Grade: ");
+        int grade = Convert.ToInt32(Console.ReadLine());
+
+        var newGrade = new Owl
+        {
+            FkcourseId = courseID,
+            FkstudentId = studentID,
+            Grade = grade,
+            GradeDate = DateOnly.FromDateTime(DateTime.Now)
+        };
+        Console.WriteLine("\n─── FOLLOWING GRADE HAS BEEN REGESTERD ───\n");
+        
+        var addedGrade = Context.Courses
+                        .Where(c => c.CourseId == courseID)
+                        .ToList();
+        var addedGrade1 = Context.Students
+                        .Where(s => s.StudentId == studentID)
+                        .ToList();
+
+        foreach(var course in addedGrade)
+        {
+            Console.WriteLine($"Course: {course.CourseName}");
+        }
+        foreach(var student in addedGrade1)
+        {
+            Console.WriteLine($"Student: {student.FirstName} {student.LastName}\nGrade: {grade}");
+        }
+
+        Context.Add(newGrade);
+        Context.SaveChanges();
+        Console.WriteLine("\n─────────────────────────────────────────────────────────────────────────────────────────────");
         Console.WriteLine("Press Enter to go back");
         Console.ReadKey();
         Console.Clear();

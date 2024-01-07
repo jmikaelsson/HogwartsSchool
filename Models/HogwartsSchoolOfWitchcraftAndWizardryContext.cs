@@ -65,19 +65,18 @@ public partial class HogwartsSchoolOfWitchcraftAndWizardryContext : DbContext
 
         modelBuilder.Entity<Owl>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("OWL");
+            entity.ToTable("OWL");
 
+            entity.Property(e => e.OwlId).HasColumnName("OwlID");
             entity.Property(e => e.FkcourseId).HasColumnName("FKCourseID");
             entity.Property(e => e.FkstudentId).HasColumnName("FKStudentID");
 
-            entity.HasOne(d => d.Fkcourse).WithMany()
+            entity.HasOne(d => d.Fkcourse).WithMany(p => p.Owls)
                 .HasForeignKey(d => d.FkcourseId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Enrolment_Course");
 
-            entity.HasOne(d => d.Fkstudent).WithMany()
+            entity.HasOne(d => d.Fkstudent).WithMany(p => p.Owls)
                 .HasForeignKey(d => d.FkstudentId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Enrolment_Students");

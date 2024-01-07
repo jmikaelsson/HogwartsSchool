@@ -16,4 +16,6 @@ public partial class Student
     public int FkclassId { get; set; }
 
     public virtual Class Fkclass { get; set; } = null!;
+
+    public virtual ICollection<Owl> Owls { get; set; } = new List<Owl>();
 }

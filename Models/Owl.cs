@@ -5,6 +5,8 @@ namespace HogwartsSchool.Models;
 
 public partial class Owl
 {
+    public int OwlId { get; set; }
+
     public int FkstudentId { get; set; }
 
     public int FkcourseId { get; set; }

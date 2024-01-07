@@ -21,6 +21,10 @@ public partial class Staff
 
     public string? Species { get; set; }
 
+    public int? Salary { get; set; }
+
+    public DateOnly? HireDate { get; set; }
+
     public virtual ICollection<Class> Classes { get; set; } = new List<Class>();
 
     public virtual ICollection<Course> Courses { get; set; } = new List<Course>();

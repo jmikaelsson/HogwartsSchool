@@ -70,6 +70,26 @@ internal class StaffMeny
     }
     public void ShowStaff(int choise)
     {
+        Console.WriteLine("\n─── HOGWARTS SCHOOL OF WITCHCRAFT AND WIZRADRY ──────────────────────────────────────────────\n");
+        //number of employee in each role
+        var staffInRole = from staff in Context.Staff
+                          join profession in Context.Professions on staff.FkprofessionId equals profession.ProfessionId
+                          where profession.ProfessionId == choise
+                          select new
+                          {
+                          };
+
+        int staffcount = 0;
+        foreach (var person in staffInRole)
+        {
+            staffcount++;
+        }
+
+        Console.WriteLine("\n─── Total employee ───\n");
+        Console.WriteLine($"There is {staffcount} emplyees");
+        Console.WriteLine("\n──────────────────────\n");
+
+        //write out all employee name
         string connectionString = "Data Source=(localdb)\\mssqllocaldb;Database=HogwartsSchoolOfWitchcraftAndWizardry;Trusted_Connection=True";
         using (var conn = new SqlConnection(connectionString))
         {
@@ -81,16 +101,15 @@ internal class StaffMeny
                     INNER JOIN Professions ON Professions.ProfessionID = Staff.FKProfessionID
                     WHERE ProfessionID=" + choise + "ORDER BY LastName", conn);
 
-
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    Console.WriteLine("\n─── HOGWARTS SCHOOL OF WITCHCRAFT AND WIZRADRY ──────────────────────────────────────────────\n");
                     while (reader.Read())
                     {
                         Console.Write(reader["Role"] + " ");
                         Console.Write(reader["FirstName"] + " ");
                         Console.WriteLine(reader["LastName"] + " ");
-                        Console.WriteLine("Species: " + reader["Species"] + "\n");
+                        Console.WriteLine("Species: " + reader["Species"]);
+                        Console.WriteLine("Workt since: " + reader["HireDate"] + "\n");
                     }
                 }
             }
@@ -99,6 +118,26 @@ internal class StaffMeny
 
             }
         }
+
+        //salary of the role
+        var query = from staff in Context.Staff
+                    join profession in Context.Professions on staff.FkprofessionId equals profession.ProfessionId
+                    where profession.ProfessionId == choise
+                    group staff by profession.ProfessionId into R
+                    select new
+                    {
+                        AverageSalary = R.Average(e => e.Salary),
+                        SumSalary = R.Sum(e => e.Salary)
+                    };
+
+        foreach (var result in query)
+        {
+            Console.WriteLine("\n─── SALARY SUMERY ───\n");
+            Console.WriteLine($"Average Salary: {result.AverageSalary}\nTotal salary: {result.SumSalary}");
+        }
+
+
+        //go back
         Console.WriteLine("\n─────────────────────────────────────────────────────────────────────────────────────────────");
         Console.WriteLine("Press Enter to go back");
         Console.ReadKey();
@@ -125,7 +164,8 @@ internal class StaffMeny
                         Console.Write(reader["Role"] + " ");
                         Console.Write(reader["FirstName"] + " ");
                         Console.WriteLine(reader["LastName"] + " ");
-                        Console.WriteLine("Species: "+reader["Species"]+"\n");
+                        Console.WriteLine("Workt since: " + reader["HireDate"] + "\n");
+                        Console.WriteLine("Species: "+reader["Species"]);
                     }
                 }
             }
@@ -199,11 +239,11 @@ internal class StaffMeny
             FirstName = firstName,
             LastName = lastName,
             FkprofessionId = staffNumber,
-            //Fkprofession = proffession,
             Street = street,
             Town = town,
             Region = region,
-            Species = typSpecies
+            Species = typSpecies,
+            HireDate = DateOnly.FromDateTime(DateTime.Now)
         };
 
         Context.Add(staff);
